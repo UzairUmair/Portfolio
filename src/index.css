@@ -1,0 +1,104 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html {
+  scroll-behavior: smooth;
+  /* offset for the sticky navbar when jumping to #anchors */
+  scroll-padding-top: 84px;
+}
+
+body {
+  margin: 0;
+  background-color: #05060f;
+  color: #e6e9f5;
+  font-family: 'Inter', system-ui, sans-serif;
+  overflow-x: hidden;
+}
+
+/* Custom neon scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #05060f;
+}
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(#3b82f6, #8b5cf6);
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(#22d3ee, #8b5cf6);
+}
+
+/* selection */
+::selection {
+  background: rgba(34, 211, 238, 0.3);
+  color: #fff;
+}
+
+@layer components {
+  /* Glassmorphism surface */
+  .glass {
+    @apply bg-white/[0.04] backdrop-blur-xl border border-white/10;
+  }
+
+  .glass-strong {
+    @apply bg-white/[0.06] backdrop-blur-2xl border border-white/15;
+  }
+
+  /* Gradient text */
+  .text-gradient {
+    @apply bg-gradient-to-r from-cyan via-electric to-violet bg-clip-text text-transparent;
+  }
+
+  .text-gradient-soft {
+    @apply bg-gradient-to-r from-white via-white to-cyan/80 bg-clip-text text-transparent;
+  }
+
+  /* Section container */
+  .container-px {
+    @apply mx-auto w-full max-w-7xl px-5 sm:px-8 lg:px-10;
+  }
+
+  /* Eyebrow label */
+  .eyebrow {
+    @apply inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.2em] text-cyan;
+  }
+
+  /* Primary glow button */
+  .btn-primary {
+    @apply relative inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-electric to-violet px-6 py-3 text-sm font-semibold text-white shadow-glow transition-all duration-300 hover:shadow-glow-violet hover:-translate-y-0.5 active:translate-y-0;
+  }
+
+  .btn-ghost {
+    @apply relative inline-flex items-center justify-center gap-2 rounded-full border border-white/15 bg-white/5 px-6 py-3 text-sm font-semibold text-white/90 backdrop-blur-md transition-all duration-300 hover:border-cyan/50 hover:bg-white/10 hover:-translate-y-0.5;
+  }
+
+  .btn-whatsapp {
+    @apply relative inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[#25D366] to-[#1ebe5a] px-6 py-3 text-sm font-semibold text-[#04210f] shadow-[0_0_30px_-6px_rgba(37,211,102,0.6)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_0_40px_-4px_rgba(37,211,102,0.8)];
+  }
+}
+
+/* Reduced motion respect */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
