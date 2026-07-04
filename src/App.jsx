@@ -8,7 +8,7 @@ import FloatingWhatsApp from './components/FloatingWhatsApp.jsx'
 
 export default function App() {
   return (
-    <div className="relative min-h-screen overflow-hidden bg-ink-900 text-slate-100">
+    <div className="relative min-h-screen overflow-hidden bg-cream-100 text-charcoal-900">
       <Navbar />
       <main>
         <Hero />

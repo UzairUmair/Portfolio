@@ -5,6 +5,13 @@ import { navLinks, profile } from '../data/site.js'
 export default function Navbar() {
   const [open, setOpen] = useState(false)
   const [active, setActive] = useState('home')
+  const [scrolled, setScrolled] = useState(false)
+
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 20)
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
 
   useEffect(() => {
     const sections = navLinks
@@ -30,29 +37,33 @@ export default function Navbar() {
       initial={{ y: -80, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.55, ease: 'easeOut' }}
-      className="fixed left-0 right-0 top-0 z-50 border-b border-white/10 bg-ink-900/70 backdrop-blur-2xl"
+      className={`fixed left-0 right-0 top-0 z-50 transition-all duration-300 ${
+        scrolled
+          ? 'border-b border-cream-300/60 bg-cream-50/90 shadow-soft backdrop-blur-xl'
+          : 'bg-transparent'
+      }`}
     >
       <nav className="container-px flex h-20 items-center justify-between">
         <a href="#home" onClick={handleNav} className="group inline-flex items-center gap-3">
-          <span className="grid h-10 w-10 place-items-center rounded-2xl border border-cyan/30 bg-cyan/10 font-display text-lg font-bold text-cyan shadow-glow">
+          <span className="grid h-10 w-10 place-items-center rounded-xl bg-forest-600 font-display text-lg font-bold text-white shadow-soft">
             U
           </span>
-          <span className="font-display text-lg font-bold tracking-wide text-white">
-            Uzair<span className="text-cyan">.dev</span>
+          <span className="font-display text-lg font-bold tracking-wide text-charcoal-900">
+            Uzair<span className="text-forest-500">.dev</span>
           </span>
         </a>
 
-        <div className="hidden items-center gap-2 lg:flex">
+        <div className="hidden items-center gap-1 lg:flex">
           {navLinks.map((link) => {
             const isActive = active === link.href.replace('#', '')
             return (
               <a
                 key={link.href}
                 href={link.href}
-                className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
+                className={`rounded-full px-4 py-2 text-sm font-semibold transition-all duration-200 ${
                   isActive
-                    ? 'bg-white/10 text-cyan shadow-[inset_0_0_0_1px_rgba(34,211,238,0.25)]'
-                    : 'text-slate-300 hover:bg-white/5 hover:text-white'
+                    ? 'bg-forest-600/10 text-forest-600'
+                    : 'text-charcoal-600 hover:bg-forest-600/5 hover:text-forest-600'
                 }`}
               >
                 {link.label}
@@ -62,8 +73,8 @@ export default function Navbar() {
         </div>
 
         <div className="hidden items-center gap-3 lg:flex">
-          <a href={profile.whatsappLink} target="_blank" rel="noreferrer" className="btn-whatsapp py-2.5">
-            WhatsApp
+          <a href={profile.whatsappLink} target="_blank" rel="noreferrer" className="btn-primary py-2.5 text-xs">
+            Let's Talk
           </a>
         </div>
 
@@ -72,21 +83,21 @@ export default function Navbar() {
           aria-label="Open navigation menu"
           aria-expanded={open}
           onClick={() => setOpen((value) => !value)}
-          className="grid h-11 w-11 place-items-center rounded-2xl border border-white/15 bg-white/5 text-white lg:hidden"
+          className="grid h-11 w-11 place-items-center rounded-xl border border-cream-300 bg-white/80 text-charcoal-800 lg:hidden"
         >
           <span className="relative h-4 w-5">
             <span
-              className={`absolute left-0 h-0.5 w-5 rounded bg-white transition ${
+              className={`absolute left-0 h-0.5 w-5 rounded bg-charcoal-800 transition ${
                 open ? 'top-2 rotate-45' : 'top-0'
               }`}
             />
             <span
-              className={`absolute left-0 top-2 h-0.5 w-5 rounded bg-white transition ${
+              className={`absolute left-0 top-2 h-0.5 w-5 rounded bg-charcoal-800 transition ${
                 open ? 'opacity-0' : 'opacity-100'
               }`}
             />
             <span
-              className={`absolute left-0 h-0.5 w-5 rounded bg-white transition ${
+              className={`absolute left-0 h-0.5 w-5 rounded bg-charcoal-800 transition ${
                 open ? 'top-2 -rotate-45' : 'top-4'
               }`}
             />
@@ -98,7 +109,7 @@ export default function Navbar() {
         <motion.div
           initial={{ opacity: 0, y: -12 }}
           animate={{ opacity: 1, y: 0 }}
-          className="border-t border-white/10 bg-ink-900/95 px-5 pb-5 pt-3 backdrop-blur-2xl lg:hidden"
+          className="border-t border-cream-300/60 bg-cream-50/95 px-5 pb-5 pt-3 backdrop-blur-xl lg:hidden"
         >
           <div className="grid gap-2">
             {navLinks.map((link) => (
@@ -106,7 +117,7 @@ export default function Navbar() {
                 key={link.href}
                 href={link.href}
                 onClick={handleNav}
-                className="rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm font-semibold text-slate-100"
+                className="rounded-xl border border-cream-300/60 bg-white/60 px-4 py-3 text-sm font-semibold text-charcoal-800"
               >
                 {link.label}
               </a>
@@ -115,10 +126,10 @@ export default function Navbar() {
               href={profile.whatsappLink}
               target="_blank"
               rel="noreferrer"
-              className="btn-whatsapp mt-1"
+              className="btn-primary mt-1"
               onClick={handleNav}
             >
-              WhatsApp Me
+              Let's Talk
             </a>
           </div>
         </motion.div>

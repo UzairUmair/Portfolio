@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 :root {
-  color-scheme: dark;
+  color-scheme: light;
 }
 
 * {
@@ -13,79 +13,72 @@
 
 html {
   scroll-behavior: smooth;
-  /* offset for the sticky navbar when jumping to #anchors */
-  scroll-padding-top: 84px;
+  scroll-padding-top: 80px;
 }
 
 body {
   margin: 0;
-  background-color: #05060f;
-  color: #e6e9f5;
+  background-color: #faf7f2;
+  color: #1a1a1a;
   font-family: 'Inter', system-ui, sans-serif;
   overflow-x: hidden;
 }
 
-/* Custom neon scrollbar */
+/* Elegant scrollbar */
 ::-webkit-scrollbar {
-  width: 10px;
+  width: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: #05060f;
+  background: #f5f0e8;
 }
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(#3b82f6, #8b5cf6);
+  background: linear-gradient(#2d6b40, #245534);
   border-radius: 10px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(#22d3ee, #8b5cf6);
+  background: linear-gradient(#3d8b55, #2d6b40);
 }
 
 /* selection */
 ::selection {
-  background: rgba(34, 211, 238, 0.3);
-  color: #fff;
+  background: rgba(45, 107, 64, 0.15);
+  color: #0f2518;
 }
 
 @layer components {
-  /* Glassmorphism surface */
-  .glass {
-    @apply bg-white/[0.04] backdrop-blur-xl border border-white/10;
-  }
-
-  .glass-strong {
-    @apply bg-white/[0.06] backdrop-blur-2xl border border-white/15;
-  }
-
-  /* Gradient text */
-  .text-gradient {
-    @apply bg-gradient-to-r from-cyan via-electric to-violet bg-clip-text text-transparent;
-  }
-
-  .text-gradient-soft {
-    @apply bg-gradient-to-r from-white via-white to-cyan/80 bg-clip-text text-transparent;
-  }
-
-  /* Section container */
+  /* Container */
   .container-px {
     @apply mx-auto w-full max-w-7xl px-5 sm:px-8 lg:px-10;
   }
 
-  /* Eyebrow label */
+  /* Section eyebrow label */
   .eyebrow {
-    @apply inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.2em] text-cyan;
+    @apply inline-flex items-center gap-2 rounded-full border border-forest-300/30 bg-forest-900/5 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.2em] text-forest-500;
   }
 
-  /* Primary glow button */
+  /* Primary button - natural green gradient */
   .btn-primary {
-    @apply relative inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-electric to-violet px-6 py-3 text-sm font-semibold text-white shadow-glow transition-all duration-300 hover:shadow-glow-violet hover:-translate-y-0.5 active:translate-y-0;
+    @apply relative inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-forest-600 to-forest-500 px-6 py-3 text-sm font-semibold text-white shadow-soft transition-all duration-300 hover:shadow-glow hover:-translate-y-0.5 active:translate-y-0;
   }
 
+  /* Ghost / outline button */
   .btn-ghost {
-    @apply relative inline-flex items-center justify-center gap-2 rounded-full border border-white/15 bg-white/5 px-6 py-3 text-sm font-semibold text-white/90 backdrop-blur-md transition-all duration-300 hover:border-cyan/50 hover:bg-white/10 hover:-translate-y-0.5;
+    @apply relative inline-flex items-center justify-center gap-2 rounded-full border border-charcoal-700/20 bg-white/60 px-6 py-3 text-sm font-semibold text-charcoal-800 backdrop-blur-sm transition-all duration-300 hover:border-forest-400/40 hover:bg-white hover:-translate-y-0.5;
   }
 
+  /* WhatsApp button */
   .btn-whatsapp {
-    @apply relative inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[#25D366] to-[#1ebe5a] px-6 py-3 text-sm font-semibold text-[#04210f] shadow-[0_0_30px_-6px_rgba(37,211,102,0.6)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_0_40px_-4px_rgba(37,211,102,0.8)];
+    @apply relative inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[#25D366] to-[#20bd5a] px-6 py-3 text-sm font-semibold text-white shadow-soft transition-all duration-300 hover:-translate-y-0.5 hover:shadow-card;
+  }
+
+  /* Card surface */
+  .card-surface {
+    @apply rounded-2xl border border-cream-300/60 bg-white/80 backdrop-blur-sm shadow-soft;
+  }
+
+  /* Text gradient - natural */
+  .text-gradient {
+    @apply bg-gradient-to-r from-forest-600 via-forest-500 to-gold-500 bg-clip-text text-transparent;
   }
 }
 

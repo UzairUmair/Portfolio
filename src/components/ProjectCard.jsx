@@ -1,33 +1,6 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 
-function WebPreview() {
-  return (
-    <div className="flex h-full min-h-[230px] flex-col bg-gradient-to-br from-ink-800 via-ink-700 to-ink-900 p-5">
-      <div className="flex items-center gap-2 border-b border-white/10 pb-4">
-        <span className="h-2.5 w-2.5 rounded-full bg-red-400" />
-        <span className="h-2.5 w-2.5 rounded-full bg-amber-300" />
-        <span className="h-2.5 w-2.5 rounded-full bg-lime" />
-        <span className="ml-3 flex-1 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-slate-400">
-          pick-and-wear.vercel.app
-        </span>
-      </div>
-      <div className="grid flex-1 place-items-center">
-        <div className="w-full max-w-xs">
-          <div className="mb-4 h-24 rounded-3xl border border-cyan/25 bg-cyan/10 shadow-glow" />
-          <div className="grid grid-cols-3 gap-3">
-            <span className="h-16 rounded-2xl bg-white/10" />
-            <span className="h-16 rounded-2xl bg-white/10" />
-            <span className="h-16 rounded-2xl bg-white/10" />
-          </div>
-          <div className="mt-4 h-3 w-2/3 rounded-full bg-cyan/40" />
-          <div className="mt-2 h-3 w-1/2 rounded-full bg-violet/40" />
-        </div>
-      </div>
-    </div>
-  )
-}
-
 export default function ProjectCard({ project, index, onPreview }) {
   const [tilt, setTilt] = useState({ rotateX: 0, rotateY: 0 })
 
@@ -35,8 +8,8 @@ export default function ProjectCard({ project, index, onPreview }) {
     const rect = event.currentTarget.getBoundingClientRect()
     const x = event.clientX - rect.left
     const y = event.clientY - rect.top
-    const rotateY = ((x / rect.width) - 0.5) * 10
-    const rotateX = ((0.5 - y / rect.height) * 10)
+    const rotateY = ((x / rect.width) - 0.5) * 8
+    const rotateX = ((0.5 - y / rect.height) * 8)
     setTilt({ rotateX, rotateY })
   }
 
@@ -50,10 +23,11 @@ export default function ProjectCard({ project, index, onPreview }) {
       onMouseLeave={() => setTilt({ rotateX: 0, rotateY: 0 })}
       style={{
         transform: `perspective(1000px) rotateX(${tilt.rotateX}deg) rotateY(${tilt.rotateY}deg)`,
+        transition: 'transform 0.15s ease-out',
       }}
-      className="group overflow-hidden rounded-[1.75rem] border border-white/10 bg-white/[0.045] shadow-card transition duration-300 hover:border-cyan/40 hover:bg-white/[0.07] hover:shadow-glow"
+      className="group overflow-hidden rounded-2xl border border-cream-300/60 bg-white/80 shadow-soft backdrop-blur-sm transition duration-300 hover:border-forest-400/30 hover:shadow-card-hover"
     >
-      <div className="relative aspect-[4/3] overflow-hidden bg-ink-800">
+      <div className="relative aspect-[4/3] overflow-hidden bg-cream-200">
         {project.thumb ? (
           <button
             type="button"
@@ -64,25 +38,27 @@ export default function ProjectCard({ project, index, onPreview }) {
             <img
               src={project.thumb}
               alt={`${project.title} thumbnail`}
-              loading={project.id === 'pick-and-wear' ? 'eager' : 'lazy'}
+              loading="lazy"
               className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
             />
           </button>
         ) : (
-          <WebPreview />
+          <div className="flex h-full items-center justify-center bg-gradient-to-br from-cream-200 to-sand-200">
+            <span className="font-display text-lg font-bold text-charcoal-400">Preview</span>
+          </div>
         )}
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink-900 via-transparent to-transparent opacity-80" />
-        <span className="pointer-events-none absolute left-4 top-4 rounded-full border border-white/15 bg-ink-900/70 px-3 py-1 text-xs font-bold uppercase tracking-[0.16em] text-cyan backdrop-blur-xl">
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-charcoal-950/40 via-transparent to-transparent opacity-0 transition group-hover:opacity-100" />
+        <span className="pointer-events-none absolute left-4 top-4 rounded-full border border-white/30 bg-white/90 px-3 py-1 text-xs font-bold uppercase tracking-[0.12em] text-forest-600 backdrop-blur-sm">
           {project.category}
         </span>
       </div>
 
       <div className="p-5 sm:p-6">
-        <h3 className="font-display text-xl font-bold text-white">{project.title}</h3>
-        <p className="mt-3 min-h-[4.5rem] text-sm leading-7 text-slate-400">{project.description}</p>
+        <h3 className="font-display text-xl font-bold text-charcoal-900">{project.title}</h3>
+        <p className="mt-3 min-h-[4.5rem] text-sm leading-7 text-charcoal-500">{project.description}</p>
         <div className="mt-5 flex flex-wrap gap-2">
           {project.tools.map((tool) => (
-            <span key={tool} className="rounded-full bg-white/[0.06] px-3 py-1 text-xs font-semibold text-slate-300">
+            <span key={tool} className="rounded-full bg-cream-200/80 px-3 py-1 text-xs font-semibold text-charcoal-600">
               {tool}
             </span>
           ))}
@@ -96,13 +72,13 @@ export default function ProjectCard({ project, index, onPreview }) {
             <button
               type="button"
               onClick={() => project.thumb && onPreview?.({ src: project.thumb, alt: project.title })}
-              className="rounded-full border border-white/10 px-4 py-2 text-xs font-semibold text-slate-300 transition hover:border-cyan/35 hover:text-cyan"
+              className="rounded-full border border-cream-300 bg-cream-100 px-4 py-2 text-xs font-semibold text-charcoal-600 transition hover:border-forest-400/40 hover:text-forest-600"
             >
               View Full Screen
             </button>
           )}
           {project.featured ? (
-            <span className="text-xs font-bold uppercase tracking-[0.18em] text-lime">Featured</span>
+            <span className="text-xs font-bold uppercase tracking-[0.16em] text-gold-500">Featured</span>
           ) : null}
         </div>
       </div>
