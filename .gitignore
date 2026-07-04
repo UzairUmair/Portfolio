@@ -8,3 +8,5 @@ Project/
 .DS_Store
 .vscode/*
 !.vscode/extensions.json
+.ideavo/project
+*.log
