@@ -1,0 +1,8 @@
+// Descriptions of the implemented interface, not claimed business results.
+export const caseNotes = {
+ freelancerflow: {problem:'Freelance work involves several related records: clients, projects, tasks and invoices.',approach:'Group those records into dedicated workspace views, connected through consistent navigation and search.',outcome:'A working dashboard interface with client, task and finance views. Explore the live project to inspect the workflow.'},
+ cineverse: {problem:'Finding a title means moving between discovery, search, details and saved choices.',approach:'Organize TMDB information into browsable shelves, title pages and a personal library.',outcome:'A movie and TV discovery interface with account access and saved titles. It does not provide video streaming.'},
+ 'pick-and-wear': {problem:'A multi-category storefront needs clear paths from product discovery to a shopping selection.',approach:'Use shared navigation, searchable product rendering and browser-persisted cart and wishlist state.',outcome:'A browsable storefront interface. The portfolio does not claim payment processing or commercial sales.'},
+ 'my-blog-app': {problem:'A writing interface needs a clear way to create, update and remove posts.',approach:'Use React state for posts and reactions, with validated forms and Material UI components.',outcome:'An interactive learning project with editing and reactions. Post data resets on page reload.'},
+ 'notes-app': {problem:'A note-taking app needs account access and a way to retain written notes.',approach:'Connect email/password authentication to a note-creation interface backed by Firestore.',outcome:'A practice app that creates and displays stored notes with author information and timestamps.'}
+};

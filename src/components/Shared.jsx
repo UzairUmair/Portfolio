@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { ArrowUpRight, ArrowRight, Download, Sun, Moon, Menu, X, ChevronLeft, ChevronRight, Expand, Mail } from 'lucide-react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { ArrowUpRight, ArrowRight, Download, Menu, X, ChevronLeft, ChevronRight, Expand, Mail } from 'lucide-react';
 import { profile } from '../data/profile';
+import { gsap, reducedMotion } from './experience/motion';
 
 export function ExternalLink({ href, children, className = '' }) {
   return <a className={className} href={href} target="_blank" rel="noopener noreferrer">{children}<ArrowUpRight size={16} aria-hidden="true" /></a>;
@@ -12,35 +13,66 @@ export function ResumeLink({ download = false, className = 'button secondary', c
 export function SectionHeading({ number, eyebrow, title, description, children }) {
   return <div className="section-heading"><div><p className="eyebrow"><span>{number}</span>{eyebrow}</p><h2>{title}</h2>{description && <p className="section-description">{description}</p>}</div>{children}</div>;
 }
-const navigation = [['home', 'Home'], ['about', 'About'], ['skills', 'Skills'], ['projects', 'Projects'], ['design', 'Design work'], ['training', 'Training'], ['contact', 'Contact']];
+const navigation = [['home', 'Home'], ['about', 'About'], ['skills', 'Skills'], ['projects', 'Projects'], ['design', 'Design'], ['training', 'Journey'], ['contact', 'Contact']];
 export function Navbar() {
   const location = useLocation();
-  const [theme, setTheme] = useState(document.documentElement.dataset.theme);
+  const navigate = useNavigate();
   const [active, setActive] = useState('home');
   const [menuOpen, setMenuOpen] = useState(false);
-  const menu = useRef(null);
-  const trigger = useRef(null);
-  const closeMenu = () => { menu.current?.close(); setMenuOpen(false); document.body.style.overflow = ''; };
-  useEffect(() => { closeMenu(); }, [location]);
+  const menu = useRef(null), trigger = useRef(null), animation = useRef(null);
+  const phase = useRef('closed'), previousOverflow = useRef(''), pendingFrame = useRef(0);
+  const closeMenu = (destination) => {
+    if (!menu.current?.open || phase.current === 'closing') return;
+    phase.current = 'closing';
+    animation.current?.kill();
+    animation.current = gsap.to(menu.current, {
+      clipPath: 'inset(0 0 100% 0)', duration: reducedMotion() ? 0 : .32, ease: 'power3.inOut',
+      onComplete: () => {
+        menu.current?.close();
+        document.body.style.overflow = previousOverflow.current;
+        phase.current = 'closed'; setMenuOpen(false);
+        if (typeof destination === 'string') pendingFrame.current = requestAnimationFrame(() => navigate(destination));
+        else trigger.current?.focus({preventScroll:true});
+      }
+    });
+  };
+  const openMenu = () => {
+    if (phase.current !== 'closed') return;
+    phase.current = 'opening'; animation.current?.kill();
+    previousOverflow.current = document.body.style.overflow;
+    menu.current.showModal(); menu.current.scrollTop = 0;
+    setMenuOpen(true); document.body.style.overflow = 'hidden';
+    const instant = reducedMotion();
+    animation.current = gsap.timeline({onComplete:()=>{phase.current='open'}})
+      .fromTo(menu.current,{clipPath:'inset(0 0 100% 0)'},{clipPath:'inset(0 0 0% 0)',duration:instant?0:.55,ease:'power4.out'})
+      .fromTo(menu.current.querySelectorAll('nav a'),{y:instant?0:28,opacity:0},{y:0,opacity:1,duration:instant?0:.4,stagger:instant?0:.035,ease:'power3.out'},instant?0:.12);
+  };
+  useEffect(() => { closeMenu(); }, [location.key]);
+  useEffect(() => () => {
+    animation.current?.kill(); cancelAnimationFrame(pendingFrame.current);
+    if (phase.current !== 'closed') document.body.style.overflow = previousOverflow.current;
+  }, []);
   useEffect(() => {
     if (location.pathname !== '/') return;
-    const observer = new IntersectionObserver(entries => {
-      entries.forEach(entry => { if (entry.isIntersecting) setActive(entry.target.id); });
-    }, { rootMargin: '-15% 0px -65% 0px' });
-    document.querySelectorAll('main section[id]').forEach(section => observer.observe(section));
-    return () => observer.disconnect();
+    let frame;
+    const update = () => {
+      const sections = [...document.querySelectorAll('main section[id]')];
+      const current = sections.filter(section=>section.getBoundingClientRect().top <= Math.max(110, innerHeight*.25)).at(-1);
+      setActive(current?.id || 'home');
+    };
+    const scroll = () => { cancelAnimationFrame(frame); frame = requestAnimationFrame(update); };
+    update(); window.addEventListener('scroll',scroll,{passive:true}); window.addEventListener('resize',scroll);
+    return () => {cancelAnimationFrame(frame);window.removeEventListener('scroll',scroll);window.removeEventListener('resize',scroll)};
   }, [location.pathname]);
-  function toggleTheme() {
-    const next = theme === 'dark' ? 'light' : 'dark';
-    setTheme(next); document.documentElement.dataset.theme = next;
-    try { localStorage.setItem('uzair-theme', next); } catch { /* Theme still works without storage. */ }
-  }
-  const links = navigation.map(([id, label]) => <Link key={id} to={`/#${id}`} onClick={closeMenu} aria-current={(location.pathname === '/' ? active === id : location.pathname.startsWith(`/${id}`)) ? 'location' : undefined}>{label}</Link>);
-  return <header className="header"><div className="container nav-inner">
+  const links = navigation.map(([id, label]) => <Link key={id} to={`/#${id}`} onClick={event=>{
+    if (!menu.current?.open || event.button!==0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    event.preventDefault(); closeMenu(`/#${id}`);
+  }} aria-current={(location.pathname === '/' ? active === id : location.pathname.startsWith(`/${id}`)) ? 'location' : undefined}>{label}<ArrowUpRight className="nav-link-arrow" size={26} aria-hidden="true"/></Link>);
+  return <header className="header" data-chapter={active}><div className="container nav-inner">
     <Link to="/#home" className="wordmark" aria-label="Uzair M. Umair home">UZ<span>.</span></Link>
     <nav className="desktop-nav" aria-label="Main navigation">{links}</nav>
-    <div className="nav-actions"><button className="icon-button" onClick={toggleTheme} aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}>{theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}</button><ResumeLink className="button secondary small">Resume</ResumeLink><button ref={trigger} className="icon-button menu-toggle" aria-label="Open navigation" aria-haspopup="dialog" aria-expanded={menuOpen} aria-controls="mobile-navigation" onClick={() => { menu.current.showModal(); setMenuOpen(true); document.body.style.overflow = 'hidden'; }}><Menu size={22} /></button></div>
-    <dialog id="mobile-navigation" ref={menu} className="mobile-menu" aria-label="Navigation" onClose={() => { setMenuOpen(false); document.body.style.overflow = ''; trigger.current?.focus(); }} onClick={e => { if (e.target === menu.current) closeMenu(); }}><div className="mobile-menu-top"><span className="wordmark">UZ<span>.</span></span><button className="icon-button" aria-label="Close navigation" onClick={closeMenu}><X /></button></div><nav aria-label="Mobile navigation">{links}</nav><p>Front-End Developer<br /><span className="muted">Karachi, Pakistan</span></p></dialog>
+    <div className="nav-actions"><ResumeLink className="button secondary small">Resume</ResumeLink><button ref={trigger} className="icon-button menu-toggle" aria-label="Open navigation" aria-haspopup="dialog" aria-expanded={menuOpen} aria-controls="mobile-navigation" onClick={openMenu}><Menu size={22} /></button></div>
+    <dialog id="mobile-navigation" ref={menu} className="mobile-menu" aria-label="Navigation" onCancel={event=>{event.preventDefault();closeMenu()}} onClose={()=>{setMenuOpen(false)}} onClick={event=>{if(event.target===menu.current)closeMenu()}}><div className="mobile-menu-top"><span className="wordmark">UZ<span>.</span></span><button className="icon-button" aria-label="Close navigation" onClick={()=>closeMenu()}><X /></button></div><nav aria-label="Portfolio navigation">{links}</nav><p>MERN Stack Developer<br /><span className="muted">Karachi, Pakistan</span></p></dialog>
   </div></header>;
 }
 export function Tags({ items }) { return <div className="tags">{items.map(item => <span key={item}>{item}</span>)}</div>; }
@@ -59,5 +91,8 @@ export function Gallery({ images, title }) {
     <dialog ref={dialog} className="lightbox" aria-label={`${title} image viewer`} onClose={() => { document.body.style.overflow = ''; }} onKeyDown={e => { if (e.key === 'ArrowRight') move(1); if (e.key === 'ArrowLeft') move(-1); }} onClick={e => { if (e.target === dialog.current) dialog.current.close(); }}><div className="lightbox-bar"><span>{title} · {index + 1} / {images.length}</span><button className="icon-button" aria-label="Close image viewer" onClick={() => dialog.current.close()}><X /></button></div><img src={images[index]} alt={`${title} enlarged`} />{images.length > 1 && <div className="lightbox-controls"><button className="button secondary" onClick={() => move(-1)}><ChevronLeft />Previous</button><button className="button secondary" onClick={() => move(1)}>Next<ChevronRight /></button></div>}</dialog></>;
 }
 export function Footer() {
-  return <footer className="footer"><div className="container footer-top"><div><Link className="wordmark" to="/#home">UZ<span>.</span></Link><p>Uzair M. Umair<span>Front-End Developer</span></p></div><nav aria-label="Footer navigation"><Link to="/projects">Projects</Link><Link to="/design">Design work</Link><a href={`mailto:${profile.email}`}><Mail size={16} />Email</a>{profile.socials.map(social => <ExternalLink key={social.label} href={social.url}>{social.label}</ExternalLink>)}</nav></div><div className="container footer-bottom"><span>© {new Date().getFullYear()} Uzair M. Umair</span><span>Built with React & Vite</span><Link to="/#home">Back to top ↑</Link></div></footer>;
+  return <footer className="footer"><div className="container footer-top"><div><Link className="wordmark" to="/#home">UZ<span>.</span></Link><p>{profile.name}<span>MERN Stack Developer</span></p></div><nav aria-label="Footer navigation"><Link to="/projects">Projects</Link><Link to="/design">Design work</Link><a href={`mailto:${profile.email}`}><Mail size={16} />Email</a>{profile.socials.map(social => <ExternalLink key={social.label} href={social.url}>{social.label}</ExternalLink>)}</nav></div><div className="container footer-bottom"><span>© {new Date().getFullYear()} {profile.name}</span><span>Built with React & Vite</span><Link to="/#home">Restart experience ↑</Link></div></footer>;
 }
+
+
+

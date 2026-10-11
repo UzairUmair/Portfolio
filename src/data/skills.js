@@ -1,8 +1,7 @@
-export const skillGroups = [
-  { title: 'Core front-end', icon: 'code', description: 'The foundation of my development work.', items: ['HTML5', 'CSS3', 'JavaScript'] },
-  { title: 'Web development', icon: 'layout', description: 'Structure, layouts and interactions.', items: ['Responsive Web Design', 'DOM Manipulation', 'Semantic HTML', 'CSS Flexbox', 'CSS Grid', 'UI Implementation'] },
-  { title: 'Platforms', icon: 'layers', description: 'Tools used across my projects.', items: ['Firebase · Basic', 'Vercel', 'Netlify'] },
-  { title: 'MERN Stack', icon: 'book', description: 'Through my ongoing training at SMIT.', learning: true, items: ['React.js', 'Node.js', 'Express.js', 'MongoDB'] },
+export const skillModules = [
+ {name:'Frontend',status:'INTERFACE SYSTEMS',items:[['HTML5','Semantic structure and accessible content.'],['CSS3','Responsive layouts and visual systems.'],['JavaScript','Interaction, application logic and browser APIs.'],['React.js','Reusable components and state-driven interfaces.'],['Material UI','Component-based interface implementation.']]},
+ {name:'Backend',status:'SERVER & DATA SYSTEMS',items:[['Node.js','Server-side JavaScript and application logic.'],['Express.js','Routing, middleware and REST API structure.'],['MongoDB','Document databases and application data modeling.'],['MERN Stack','Connecting React interfaces with a backend.']]},
+ {name:'Tools',status:'WORKFLOW',items:[['Firebase · Basics','Authentication and data integration fundamentals.'],['Vercel','Deploying and sharing web projects.'],['Responsive design','Adapting interfaces to different screens.']]},
+ {name:'Design',status:'VISUAL PRACTICE',items:[['Photoshop','Image compositions, posters and advertising.'],['Illustrator','Vector graphics and visual communication.'],['UI implementation','Translating a visual idea into a working interface.']]}
 ];
 
-export const supportingSkills = ['Graphic Design'];
