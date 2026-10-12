@@ -84,10 +84,12 @@ export function Experience() {
       };
       lenis.start(); move();
     };
-    const tick = time => { if (document.querySelector('dialog[open]')) lenis.stop(); else lenis.start(); lenis.raf(time * 1000); };
+    const syncDialogs=()=>{if(document.querySelector('dialog[open]'))lenis.stop();else lenis.start()};
+    const dialogs=new MutationObserver(syncDialogs);dialogs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['open']});syncDialogs();
+    const tick = time => { if(!document.hidden)lenis.raf(time * 1000); };
     const update = () => ScrollTrigger.update();
     lenis.on('scroll', update); gsap.ticker.add(tick);
-    return () => { navigation.scrollTo=null; gsap.ticker.remove(tick); lenis.off('scroll', update); lenis.destroy(); };
+    return () => { navigation.scrollTo=null; dialogs.disconnect(); gsap.ticker.remove(tick); lenis.off('scroll', update); lenis.destroy(); };
   }, [motion]);
   useEffect(() => {
     if (reducedMotion()) return;
