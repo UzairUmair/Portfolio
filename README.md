@@ -1,77 +1,88 @@
-# Uzair Umair — MERN Stack Developer
+# Uzair Creative Portfolio
 
-A creative portfolio with a light editorial layout, interactive 3D artwork, two featured web projects, and a slow graphic-design rainfall gallery.
-
-![Portfolio preview](docs/images/portfolio-preview.webp)
-
-## Highlights
-
-- FreelancerFlow and CineVerse presented as animated project passes.
-- Three additional web projects and seven graphic-design works.
-- Real WebGL artwork, scroll animation, mobile layouts and reduced-motion support.
-- Project detail pages, downloadable résumé and contact links.
-- Fifteen prerendered pages with individual metadata and structured data.
+Independent Next.js App Router portfolio with warm ivory surfaces, pastel artwork, editorial typography and GSAP motion. This repository now serves the new portfolio from its root. The previous Vite version is preserved in `legacy-light-portfolio/`. All assets required to run this project are included.
 
 ## Run locally
 
-Use Node.js 22.12 or newer.
+Use Node.js 22 LTS or newer and npm.
 
 ```sh
 npm ci
 npm run dev
 ```
 
+Open http://127.0.0.1:5175. For the production version, stop the development server first:
+
 ```sh
+npm run typecheck
 npm run build
-npm run preview
+npm start
 ```
 
-The production build is written to `dist/`.
+The app uses local fonts and local optimized artwork. No API keys, database or runtime external asset service are required. Live-project buttons link to the original applications.
 
-## Stack
+## Edit content
 
-React · Vite · React Router · Three.js · React Three Fiber · GSAP · Lenis · Lucide
+- `src/data/site.ts`: identity, contact details, skills and journey.
+- `src/data/projects.ts`: featured web projects, graphic artwork and case-study copy. Each project automatically gets `/work/[slug]`. Keep titles, technologies and project claims accurate.
+- `src/components/sections/`: home and shared page sections. Hero/About have editorial copy alongside the central site data.
+- `src/styles/global.css`: color, spacing, responsive layouts and CSS motion.
+- `src/components/animations/Motion.tsx`: GSAP, desktop smooth scrolling, horizontal gallery and lifecycle cleanup.
+- `public/images/`: portrait, original artwork and sculpture.
+- `public/mockups/`: optimized project presentations.
 
-## Customize
+To add a project, add its entry to the projects array and its local images. Use the `Concept` status for concept work (excluded from the sitemap and marked noindex). Only supply genuine live/source links. The current two projects are CineVerse and FreelancerFlow; no unverified client projects, credentials or testimonials were invented.
 
-| Location | Content |
-| --- | --- |
-| `src/data/profile.js` | Identity, contact details and résumé |
-| `src/data/projects.js` | Web projects and live links |
-| `src/data/designProjects.js` | Graphic-design gallery |
-| `src/styles/editorial.css` | Editorial design and responsive styles |
-| `public/` | Images, local fonts and résumé |
-| `src/seo.js` | Metadata and structured data |
+## Artwork and mockups
 
-The contact form opens an email draft by default. An optional public form-provider endpoint can be configured through `VITE_CONTACT_ENDPOINT`. Never put private keys into Vite environment variables; they are exposed to the browser.
-
-## Upload to GitHub
-
-This package contains source files and public assets only. Do not upload `node_modules`, `dist`, private environment files, recordings or local test artifacts.
-
-**Browser upload:** extract the ZIP, open the extracted folder, and drag its contents into the repository’s **Add file → Upload files** area. Keep `package.json` at the repository root. Do not upload the ZIP itself. If GitHub reports too many files, upload folders in separate batches.
-
-**Git:** from this folder, for a new repository:
+Four original compositions (wide and detail for each featured project) combine freshly captured public application screens with editorial frames. Editable, self-contained HTML sources and source screenshots are in `assets/sources/`. FreelancerFlow's public screen is its sign-in interface; these mockups do not claim to be authenticated dashboard captures.
 
 ```sh
-git init
-git add .
-git commit -m "Add MERN developer portfolio"
-git branch -M main
-git remote add origin YOUR_REPOSITORY_URL
-git push -u origin main
+npx playwright install chromium
+npm run mockups
 ```
 
-A GitHub Actions workflow runs the production build on pushes and pull requests.
+This regenerates the four WebP compositions, smaller variants, social card and ribbon WebP. Edit `scripts/render-mockups.mjs` to change framing, typography or colors. Replace source PNGs to update application screenshots. Set optional `CHROME_PATH` to use another Chromium executable.
 
-## Deploy and configure search
+The hero sculpture is an original mathematically projected ribbon, rendered from editable `assets/sources/ribbon.svg`. To change its geometry, edit `scripts/ribbon.py`, run `python scripts/ribbon.py`, then `npm run mockups`. Runtime uses an optimized WebP with transform animation, so it needs no WebGL renderer.
 
-Import the repository into Vercel or Netlify. Build command: `npm run build`. Output directory: `dist`. The routing configuration preserves static pages and client-side navigation.
+The four graphic designs came from the user's original SMIT files; the portrait came from the supplied local portrait. `scripts/prepare-assets.mjs` records those original machine-specific source paths and public screenshot URLs. It is a one-time preparation utility, not a required build step. On another machine, update those paths before running it. No code or assets were imported from the old portfolios. Font licenses are included in `fonts/`.
 
-The public domain is intentionally unset. Once chosen, add `VITE_SITE_URL=https://your-domain.com` to the hosting build environment and rebuild. Canonical URLs and the sitemap will then be generated. See [Search setup](docs/SEARCH.md) for Google Search Console verification and submission.
+## Motion and accessibility
 
-GitHub repository upload alone does not publish a live website. GitHub Pages would require additional routing/base-path configuration. Search eligibility does not guarantee indexing or rankings.
+Desktop uses smooth wheel scrolling, project image reveals, a pinned horizontal artwork gallery and restrained magnetic buttons. Touch devices use native scrolling and a swipeable gallery. Offscreen sculpture motion pauses; reduced-motion preferences disable decorative motion. Content is server-rendered and remains available without JavaScript. Navigation includes a skip link, mobile menu, focus states and native artwork dialogs with Escape dismissal.
 
-## Credits and ownership
+## SEO and domain setup
 
-Portfolio content and artwork: Uzair Umair. Local font licenses are included alongside the fonts. Visual inspiration: [giats.me](https://giats.me/). No blanket reuse license is granted for personal artwork or project screenshots.
+The public domain has not been selected. Do not enter an invented canonical domain. Copy `.env.example` to `.env.local` only when needed:
+
+- `SITE_URL`: the final HTTPS production origin, without a path.
+- `GOOGLE_SITE_VERIFICATION`: your actual Search Console verification token.
+- `BING_SITE_VERIFICATION`: your actual Bing verification token.
+
+Rebuild after changing these values. Without SITE_URL, canonicals and sitemap URLs are deliberately omitted. With it, the site generates canonical metadata, absolute social images and a sitemap covering real pages. Preview deployments (`VERCEL_ENV=preview`) have noindex metadata, an X-Robots-Tag header and a disallow robots file.
+
+Each page has a unique title/description, one H1, readable server content and relevant structured data. Person, WebPage, CreativeWork and project breadcrumbs help describe the portfolio. This also makes the content understandable to search and AI systems; ranking or AI citations cannot be guaranteed.
+
+After publishing: verify the real domain in Google Search Console, submit `/sitemap.xml`, inspect the home and project URLs, and check mobile rendering and indexing. Search Console measures and manages search visibility; it does not host the portfolio.
+
+References: [Next.js metadata](https://nextjs.org/docs/app/api-reference/functions/generate-metadata), [Google AI features guidance](https://developers.google.com/search/docs/appearance/ai-features).
+
+## GitHub and Vercel
+
+This project is uploaded to the existing UzairUmair/Portfolio repository on main. Include `src`, `public`, `fonts`, `scripts`, `assets`, package files and configuration. Do not upload `node_modules`, `.next`, `artifacts`, `.env.local` or secrets; `.gitignore` covers these. Use Git/GitHub Desktop for folder uploads rather than the browser's 100-file upload batch.
+
+Import the repository into Vercel, choose Next.js, and use this folder as the root if it is inside a larger repository. Default build command: `npm run build`. Add the production domain and verification environment variables once chosen, then redeploy. Use the main production branch and repository root (leave Root Directory empty), not premium-portfolio. The included vercel.json selects Next.js and .next output instead of the old Vite configuration. A push may trigger an automatic Vercel deployment.
+
+## Validation
+
+```sh
+npm run typecheck
+npm run build
+npx playwright install chromium
+# With npm start running in another terminal:
+npm run test:browser
+node scripts/check-seo.cjs
+```
+
+Browser checks cover 360, 390, 430, 768, 1024, 1280, 1440 and 1920px widths; overflow; navigation; case studies; artwork dialogs; image decoding; structured data; genuine 404 responses; no-JavaScript content; reduced motion; and page errors. Screenshots are written to ignored `artifacts/`. Set TEST_URL for another local port and CHROME_PATH for an existing browser. Automated desktop browser emulation is not a substitute for testing on physical low-end phones; no physical-device performance score is claimed.
