@@ -1,0 +1,1 @@
+import {Button} from '@/components/ui/Elements';export default function NotFound(){return <section className="page-heading not-found"><p className="eyebrow">404 / A SMALL DETOUR</p><h1>Nothing here.<br/><em>Plenty to explore.</em></h1><Button href="/work">Back to the work</Button></section>}

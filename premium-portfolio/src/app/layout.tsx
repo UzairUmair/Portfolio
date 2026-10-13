@@ -1,0 +1,4 @@
+import type {Metadata} from 'next';import localFont from 'next/font/local';import Header from '@/components/layout/Header';import Footer from '@/components/layout/Footer';import Motion from '@/components/animations/Motion';import '@/styles/global.css';
+const sans=localFont({src:'../../fonts/manrope.woff2',variable:'--font-sans',display:'swap'});const serif=localFont({src:'../../fonts/serif.woff2',variable:'--font-serif',display:'swap'});
+export const metadata:Metadata={verification:{google:process.env.GOOGLE_SITE_VERIFICATION||undefined,other:process.env.BING_SITE_VERIFICATION?{'msvalidate.01':process.env.BING_SITE_VERIFICATION}:undefined},icons:{icon:'/icon.svg'}};
+export default function RootLayout({children}:{children:React.ReactNode}){return <html lang="en" className={`${sans.variable} ${serif.variable}`}><body id="top"><a className="skip-link" href="#main">Skip to content</a><Header/><main id="main">{children}</main><Footer/><Motion/></body></html>}

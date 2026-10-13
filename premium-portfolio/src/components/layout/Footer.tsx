@@ -1,0 +1,2 @@
+import Link from 'next/link';import {ArrowUpRight,ArrowUp} from 'lucide-react';import {site} from '@/data/site';
+export default function Footer(){return <footer className="footer"><Link className="footer-mark" href="/">UZ.</Link><p>Creative developer.<br/>Karachi, Pakistan.</p><div><a href={site.github}>GitHub <ArrowUpRight size={14}/></a><a href={site.linkedin}>LinkedIn <ArrowUpRight size={14}/></a></div><a className="back-top" href="#top">Back to top <ArrowUp size={16}/></a><span className="footer-note">Design considered. Details cared for.</span></footer>}

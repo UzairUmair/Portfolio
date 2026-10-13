@@ -1,0 +1,3 @@
+import Contact from '@/components/sections/Contact';import {metadata as meta,pageSchema} from '@/lib/seo';import {JsonLd} from '@/components/ui/Elements';
+export const metadata=meta('Contact Uzair Umair | Let’s make something thoughtful','Get in touch with Uzair Umair in Karachi for front-end development, React interfaces and creative web projects. Email or connect on WhatsApp.','/contact');
+export default function Page(){return <div className="inner-page contact-page"><JsonLd data={pageSchema('/contact','Contact Uzair Umair')}/><h1 className="sr-only">Contact Uzair Umair</h1><Contact/><p className="contact-note">Based in Karachi. Open to thoughtful collaborations.</p></div>}

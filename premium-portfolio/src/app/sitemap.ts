@@ -1,0 +1,1 @@
+import type {MetadataRoute} from 'next';import {origin,preview} from '@/lib/seo';import {projects} from '@/data/projects';export default function sitemap():MetadataRoute.Sitemap {if(!origin||preview)return [];return ['/','/about','/work','/contact',...projects.filter(p=>p.status!=='Concept').map(p=>'/work/'+p.slug)].map(path=>({url:origin+path}));}
